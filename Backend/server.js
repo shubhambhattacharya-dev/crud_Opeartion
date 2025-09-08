@@ -1,18 +1,21 @@
-import express from 'express'
+import express from 'express';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
+import productRoutes from './routes/product.routes.js';
 
 dotenv.config();
 
-const app=express();
-const port=process.env.PORT || 8000;
+const app = express();
+const port = process.env.PORT || 8000;
 
-app.post("/product",(req,res)=>{
-    
-})
+app.use(express.json());
 
-app.listen(port,()=>{
-    connectDB();
-    console.log(`http://localhost:${port}`);
+app.use('/api/products', productRoutes); 
 
-})
+connectDB()
+  .then(() => {
+    app.listen(port, () => console.log(`http://localhost:${port}`));
+  })
+  .catch((err) => {
+    console.error('Failed to connect DB:', err);
+  });
